@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+         }
+
+           .container {
+            text-align: center;
+        }
+
+         h1 {
+            margin-bottom: 15px;
+        }
+
+         .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 10px;
+            margin: 20px auto;
+        }
+
+            .cell {
+            width: 100px;
+            height: 100px;
+            background: #1e293b;
+            font-size: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+            .cell:hover {
+            background: #334155;
+        }
+
+          button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #38bdf8;
+        }
+
+          button:hover {
+            background: #0ea5e9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+         <h1>Tic Tac Toe</h1>
+        <h2 id="status">Player X's turn</h2>
+
+         <div class="board">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+
+         <button onclick="resetGame()">Restart Game</button>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll(".cell");
+        const statusText = document.getElementById("status");
+
+        let currentPlayer = "X";
+         let gameActive = true;
+
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+         cells.forEach(cell => {
+            cell.addEventListener("click", () => {
+                if (cell.textContent !== "" || !gameActive) return;
+
+                cell.textContent = currentPlayer;
+                checkWinner();
+
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+                  if (gameActive) {
+                    statusText.textContent = `Player ${currentPlayer}'s turn`;
+                }
+               });
+        });
+
+          function checkWinner() {
+            for (let combo of winningCombinations) {
+                   const [a, b, c] = combo;
+
+                   if (
+                    cells[a].textContent &&
+                    cells[a].textContent === cells[b].textContent &&
+                    cells[a].textContent === cells[c].textContent
+                  ) {
+                    statusText.textContent = `Player ${cells[a].textContent} wins 🎉`;
+                    gameActive = false;
+                    return;
+                        }
+             }
+
+            let draw = true;
+             cells.forEach(cell => {
+                if (cell.textContent === "") draw = false;
+            });
+
+             if (draw) {
+                statusText.textContent = "It's a draw 😐";
+                gameActive = false;
+            }
+         }
+
+        function resetGame() {
+              cells.forEach(cell => cell.textContent = "");
+             currentPlayer = "X";
+              gameActive = true;
+              statusText.textContent = "Player X's turn";
+        }
+    </script>
+
+ </body>
+
+ </html>
